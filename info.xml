@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<extension key="limitunsubscribe" type="module">
+  <file>limitunsubscribe</file>
+  <name>Limit Unsubscribe</name>
+  <description>A CiviCRM extension that acts as a safegaurd to prevent users from ubsubscribing an entire mailing list serve, if the group consists of a minimum number of contacts (i.e. a Google Group).</description>
+  <license>AGPL-3.0</license>
+  <maintainer>
+    <author>Brienne Kordis</author>
+    <email>brienne@megaphonetech</email>
+  </maintainer>
+  <urls>
+    <url desc="Main Extension Page">https://github.com/briennekordis/limitUnsubscribe</url>
+    <url desc="Documentation">https://github.com/briennekordis/limitUnsubscribe#readme</url>
+    <url desc="Support">https://github.com/briennekordis/limitUnsubscribe</url>
+    <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
+  </urls>
+  <releaseDate>2023-09-20</releaseDate>
+  <version>1.0</version>
+  <develStage>alpha</develStage>
+  <compatibility>
+    <ver>5.66</ver>
+  </compatibility>
+  <comments>This is a custom module, made and maintained by Megaphone Technology.</comments>
+  <classloader>
+    <psr0 prefix="CRM_" path="."/>
+    <psr4 prefix="Civi\" path="Civi"/>
+  </classloader>
+  <civix>
+    <namespace>CRM/Limitunsubscribe</namespace>
+    <format>23.02.1</format>
+    <angularModule>crmLimitunsubscribe</angularModule>
+  </civix>
+  <mixins>
+    <mixin>mgd-php@1.0.0</mixin>
+    <mixin>setting-php@1.0.0</mixin>
+    <mixin>smarty-v2@1.0.1</mixin>
+  </mixins>
+</extension>
