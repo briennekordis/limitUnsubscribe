@@ -72,11 +72,7 @@ function limitunsubscribe_civicrm_buildForm($formName, $form) {
   if ($formName === 'CRM_Mailing_Form_Unsubscribe') {
     $contactMin = 3;
     $groupsArray = $form->getTemplate()->_tpl_vars["groups"];
-    if ($groupsArray) {
-      foreach ($groupsArray as $key => $group) {
-        $groupTitle = $group['title'];
-      }
-    }
+    $groupTitle = reset($groupsArray)['title'];
     $contactCount = \Civi\Api4\Group::get(FALSE)
       ->addSelect('contact_count')
       ->addWhere('title', '=', $groupTitle)
@@ -91,22 +87,21 @@ function limitunsubscribe_civicrm_buildForm($formName, $form) {
 
 function limitunsubscribe_civicrm_alterContent(&$content, $context, $tplName, &$object) {
   // Search and replace for the text to change in the .tpl file.
-  if($context === "form") {
-    if($tplName === "CRM/Mailing/Form/Unsubscribe.tpl" && (!$object->_elementIndex["buttons"])) {
-      // Hide the status warning on the page for the unsubscribe confirmation.
-      $statusDiv = '<div class="messages status no-popup">';
-      $alteredStatusDiv = '<div class="messages status no-popup" style="display:none">';
-      $content = str_replace($statusDiv, $alteredStatusDiv, $content);
-      // Use a comniation of string and Regex replacement to remove the unsubscribe confirmation that includes the contact's email address.
-      $contentLineBeginning = 'You are requesting to unsubscribe <strong>all email addresses for';
-      $contentLineEnding = ' </strong> from the above mailing list.';
-      $content = str_replace($contentLineBeginning, '', $content);
-      $content = str_replace($contentLineEnding, '', $content);
-      $content = preg_replace('/\s[a-zA-Z]{2}\*+/', '', $content);
-      // Change the last of the confirmation to indicate the reason why unsubscribing from the group is not available via CiviCRM.
-      $secondContentLine = 'If this is your email address and you <strong>wish to unsubscribe</strong> please click the <strong>Unsubscribe</strong> button to confirm.';
-      $newContentLine = 'This mailing group is a Google Group. Please unsubscribe from the Google Group directly.';
-      $content = str_replace($secondContentLine, $newContentLine, $content);
-    }
+  if($tplName === "CRM/Mailing/Form/Unsubscribe.tpl" && (!isset($object->_elementIndex["buttons"]))) {
+    // Hide the status warning on the page for the unsubscribe confirmation.
+    $statusDiv = '<div class="messages status no-popup">';
+    $alteredStatusDiv = '<div class="messages status no-popup" style="display:none">';
+    $content = str_replace($statusDiv, $alteredStatusDiv, $content);
+    // Use a combination of string and Regex replacement to remove the unsubscribe confirmation that includes the contact's email address.
+    $contentLineBeginning = 'You are requesting to unsubscribe <strong>all email addresses for';
+    $contentLineEnding = ' </strong> from the above mailing list.';
+    $content = str_replace($contentLineBeginning, '', $content);
+    $content = str_replace($contentLineEnding, '', $content);
+    // Remove the partially redacted email address from the content line.
+    $content = preg_replace('/\s[a-zA-Z]{2}\*+/', '', $content);
+    // Change the last of the confirmation to indicate the reason why unsubscribing from the group is not available via CiviCRM.
+    $secondContentLine = 'If this is your email address and you <strong>wish to unsubscribe</strong> please click the <strong>Unsubscribe</strong> button to confirm.';
+    $newContentLine = 'This mailing group is a Google Group. Please unsubscribe from the Google Group directly.';
+    $content = str_replace($secondContentLine, $newContentLine, $content);
   }
 }
