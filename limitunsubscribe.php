@@ -78,9 +78,9 @@ function limitunsubscribe_civicrm_buildForm($formName, $form) {
       ->addWhere('title', '=', $groupTitle)
       ->execute()
       ->first()['contact_count'] ?? 0;
-  }
-  if ($contactCount <= $contactMin) {
-    $form->removeElement('buttons');
+    if ($contactCount <= $contactMin) {
+      $form->removeElement('buttons');
+    }
   }
 }
 
